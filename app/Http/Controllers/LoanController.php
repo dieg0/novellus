@@ -157,7 +157,7 @@ class LoanController extends Controller
             'monthly_payment' => $averageMonthlyPayment,
             'total_interest' => $totalInterest,
             'total_paid' => $loanAmount + $totalInterest,
-            'final_payment' => $endDate->format('Y m d'),
+            'final_payment' => $endDate->format('Y-m-d'),
             'daily_principal_payment' => $dailyPrincipalPayment,
             'total_days' => $totalDays,
             'daily_payments' => $dailyPayments,
