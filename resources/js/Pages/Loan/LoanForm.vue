@@ -23,7 +23,7 @@ const calculateLoan = () => {
     const formData = {
         ...form.data(),
         annual_interest_rate: parseFloat(form.annual_interest_rate) / 100,
-        loan_amount: parseInt(form.loan_amount),
+        loan_amount: parseInt(form.loan_amount, 10),
     };
 
     axios
