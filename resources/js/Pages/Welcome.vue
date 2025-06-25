@@ -15,7 +15,9 @@ defineProps({
 
 <template>
     <Head title="Welcome" />
-    <div class="bg-gray-50 text-black/50 dark:bg-black dark:text-white/50">
+    <div
+        class="bg-gray-50 text-black/50 dark:bg-black dark:text-white/50 bg-[url(/imgs/Novellus-BG-1.jpg)] bg-cover bg-center"
+    >
         <img id="background" class="absolute -left-20 top-0 max-w-[877px]" />
         <div
             class="relative min-h-screen flex flex-col items-center justify-center selection:bg-[#FF2D20] selection:text-white"
@@ -53,11 +55,15 @@ defineProps({
                     </nav>
                 </header>
 
-                <main class="mt-6">
-                    <label for="my_modal_7" class="btn">
+                <main
+                    class="flex flex-col items-center justify-center gap-10 h-lvh"
+                >
+                    <img src="/imgs/Novellus-logo.png" class="w-1/3" />
+                    <label for="my_modal_7" class="btn btn-xl">
+                        Calculate Your Loan
                         <Icon
                             icon="line-md:briefcase-check"
-                            class="w-10 h-auto"
+                            class="w-8 h-auto"
                         />
                     </label>
                     <input
@@ -67,7 +73,7 @@ defineProps({
                     />
                     <div class="modal" role="dialog">
                         <div class="modal-box w-11/12 max-w-5xl">
-                            <h3 class="text-lg font-bold">
+                            <h3 class="text-lg font-bold text-left">
                                 Calculate Your Loan
                             </h3>
                             <LoanForm />

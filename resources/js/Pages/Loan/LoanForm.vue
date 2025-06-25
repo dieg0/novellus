@@ -67,7 +67,7 @@ const formatDate = (dateString) => {
 </script>
 
 <template>
-    <div>
+    <div class="text-left">
         <div>
             <form @submit.prevent="calculateLoan" class="space-y-6 pt-4">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -266,7 +266,7 @@ const formatDate = (dateString) => {
 
                 <div class="bg-base-200 p-4 rounded-lg shadow-sm">
                     <h3 class="text-sm font-medium mb-2">Loan Duration</h3>
-                    <p class="text-2xl font-bold text-warning">
+                    <p class="text-2xl font-bold text-success">
                         {{ calculationResults.summary.total_days }}
                         days
                     </p>
