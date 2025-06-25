@@ -58,7 +58,7 @@ defineProps({
                 <main
                     class="flex flex-col items-center justify-center gap-10 h-lvh"
                 >
-                    <img src="/imgs/Novellus-logo.png" class="w-1/3" />
+                    <img src="/imgs/Novellus-logo.png" class="w-1/3" alt="Novellus Logo" />
                     <label for="my_modal_7" class="btn btn-xl">
                         Calculate Your Loan
                         <Icon
