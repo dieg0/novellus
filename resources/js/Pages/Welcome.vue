@@ -1,6 +1,7 @@
 <script setup>
 import { Head, Link } from "@inertiajs/vue3";
 import { Icon } from "@iconify/vue";
+import LoanForm from "./Loan/LoanForm.vue";
 
 defineProps({
     canLogin: {
@@ -53,26 +54,23 @@ defineProps({
                 </header>
 
                 <main class="mt-6">
-                    <!-- The button to open modal -->
                     <label for="my_modal_7" class="btn">
                         <Icon
                             icon="line-md:briefcase-check"
                             class="w-10 h-auto"
                         />
                     </label>
-
-                    <!-- Put this part before </body> tag -->
                     <input
                         type="checkbox"
                         id="my_modal_7"
                         class="modal-toggle"
                     />
                     <div class="modal" role="dialog">
-                        <div class="modal-box">
-                            <h3 class="text-lg font-bold">Hello!</h3>
-                            <p class="py-4">
-                                This modal works with a hidden checkbox!
-                            </p>
+                        <div class="modal-box w-11/12 max-w-5xl">
+                            <h3 class="text-lg font-bold">
+                                Calculate Your Loan
+                            </h3>
+                            <LoanForm />
                         </div>
                         <label class="modal-backdrop" for="my_modal_7"
                             >Close</label
