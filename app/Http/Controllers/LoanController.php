@@ -145,7 +145,13 @@ class LoanController extends Controller
             $currentDate->addDay();
         }
 
-        $averageMonthlyPayment = ($totalInterest + $loanAmount) / ($totalDays / 30);
+        $totalMonths = 0;
+        $currentMonth = $startDate->copy();
+        while ($currentMonth->lessThanOrEqualTo($endDate)) {
+            $totalMonths++;
+            $currentMonth->addMonth();
+        }
+        $averageMonthlyPayment = ($totalInterest + $loanAmount) / $totalMonths;
 
         return [
             'monthly_payment' => $averageMonthlyPayment,
