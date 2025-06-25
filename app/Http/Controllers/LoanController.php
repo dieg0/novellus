@@ -109,17 +109,77 @@ class LoanController extends Controller
         $dailyRate = $annualRate / 365;
         switch ($repaymentType) {
             case 'repayment':
-                return $this->calculateRepaymentLoan($loanAmount, $startDate, $endDate, $dailyRate);
+                return $this->calculateRepaymentLoan($loanAmount, $annualRate, $startDate, $endDate, $dailyRate);
             default:
                 throw new \InvalidArgumentException('Invalid repayment type');
         }
     }
 
     /**
-     * Calculate repayment loan
-     * This method does not include standard amortising payments.
+     * Calculate standard amortizing repayment loan with daily interest accumulation
      */
-    private function calculateRepaymentLoan(int $loanAmount, Carbon $startDate, Carbon $endDate, float $dailyRate)
+    private function calculateRepaymentLoan(int $loanAmount, float $annualRate, Carbon $startDate, Carbon $endDate, float $dailyRate)
+    {
+        $months = $startDate->diffInMonths($endDate);
+        if ($months == 0) {
+            $months = 1;
+        }
+
+        $monthlyRate = $annualRate / 12;
+
+        // Standard amortization formula for EQUAL MONTHLY PAYMENTS
+        // PMT = P * [r(1+r)^n] / [(1+r)^n - 1]
+        if ($monthlyRate > 0) {
+            $monthlyPayment = $loanAmount * ($monthlyRate * pow(1 + $monthlyRate, $months)) / (pow(1 + $monthlyRate, $months) - 1);
+        } else {
+            $monthlyPayment = $loanAmount / $months;
+        }
+
+        // BUT: Calculate the actual interest portion using DAILY accumulation
+        $totalInterest = $this->calculateDailyInterestWithMonthlyPayments($loanAmount, $startDate, $endDate, $dailyRate, $monthlyPayment);
+
+        return [
+            'monthly_payment' => $monthlyPayment,
+            'total_interest' => $totalInterest,
+            'total_paid' => $loanAmount + $totalInterest,
+            'final_payment' => $endDate->format('Y-m-d'),
+        ];
+    }
+
+    /**
+     * Calculate daily interest accumulation with standard monthly payments
+     */
+    private function calculateDailyInterestWithMonthlyPayments(int $loanAmount, Carbon $startDate, Carbon $endDate, float $dailyRate, float $monthlyPayment)
+    {
+        $balance = $loanAmount;
+        $totalInterest = 0;
+        $currentDate = $startDate->copy();
+
+        $paymentDates = [];
+        $paymentDate = $startDate->copy()->addMonth();
+        while ($paymentDate->lte($endDate)) {
+            $paymentDates[] = $paymentDate->format('Y-m-d');
+            $paymentDate->addMonth();
+        }
+
+        while ($currentDate->lte($endDate) && $balance > 0.01) {
+            $dailyInterest = $balance * $dailyRate;
+            $totalInterest += $dailyInterest;
+
+            if (in_array($currentDate->format('Y-m-d'), $paymentDates)) {
+                $balance = max(0, $balance - $monthlyPayment + $dailyInterest);
+            }
+
+            $currentDate->addDay();
+        }
+
+        return $totalInterest;
+    }
+
+    /**
+     * Calculate daily payment structure with fixed principal + daily interest
+     */
+    private function calculateDailyPaymentStructure(int $loanAmount, float $dailyRate, Carbon $startDate, Carbon $endDate)
     {
         $totalDays = $startDate->diffInDays($endDate) + 1;
         $dailyPrincipalPayment = $loanAmount / $totalDays;
@@ -142,6 +202,7 @@ class LoanController extends Controller
             ];
             $totalInterest += $dailyInterest;
             $balance -= $dailyPrincipalPayment;
+
             $currentDate->addDay();
         }
 
@@ -154,13 +215,11 @@ class LoanController extends Controller
         $averageMonthlyPayment = ($totalInterest + $loanAmount) / $totalMonths;
 
         return [
-            'monthly_payment' => $averageMonthlyPayment,
-            'total_interest' => $totalInterest,
-            'total_paid' => $loanAmount + $totalInterest,
-            'final_payment' => $endDate->format('Y m d'),
             'daily_principal_payment' => $dailyPrincipalPayment,
-            'total_days' => $totalDays,
+            'total_interest' => $totalInterest,
+            'average_monthly_payment' => $averageMonthlyPayment,
             'daily_payments' => $dailyPayments,
+            'total_days' => $totalDays,
         ];
     }
 }
