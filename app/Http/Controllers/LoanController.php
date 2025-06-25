@@ -117,7 +117,7 @@ class LoanController extends Controller
 
     /**
      * Calculate repayment loan
-     * This method does not include standard amortizing payments.
+     * This method does not include standard amortising payments.
      */
     private function calculateRepaymentLoan(int $loanAmount, Carbon $startDate, Carbon $endDate, float $dailyRate)
     {
