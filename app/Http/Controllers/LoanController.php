@@ -215,8 +215,11 @@ class LoanController extends Controller
         $averageMonthlyPayment = ($totalInterest + $loanAmount) / $totalMonths;
 
         return [
-            'daily_principal_payment' => $dailyPrincipalPayment,
+            'monthly_payment' => $averageMonthlyPayment,
             'total_interest' => $totalInterest,
+            'total_paid' => $loanAmount + $totalInterest,
+            'final_payment' => $endDate->format('Y-m-d'),
+            'daily_principal_payment' => $dailyPrincipalPayment,
             'average_monthly_payment' => $averageMonthlyPayment,
             'daily_payments' => $dailyPayments,
             'total_days' => $totalDays,

@@ -1,6 +1,7 @@
 <script setup>
 import { Head, Link } from "@inertiajs/vue3";
 import { Icon } from "@iconify/vue";
+import LoanForm from "./Loan/LoanForm.vue";
 
 defineProps({
     canLogin: {
@@ -14,7 +15,9 @@ defineProps({
 
 <template>
     <Head title="Welcome" />
-    <div class="bg-gray-50 text-black/50 dark:bg-black dark:text-white/50">
+    <div
+        class="bg-gray-50 text-black/50 dark:bg-black dark:text-white/50 bg-[url(/imgs/Novellus-BG-1.jpg)] bg-cover bg-center"
+    >
         <img id="background" class="absolute -left-20 top-0 max-w-[877px]" />
         <div
             class="relative min-h-screen flex flex-col items-center justify-center selection:bg-[#FF2D20] selection:text-white"
@@ -52,27 +55,28 @@ defineProps({
                     </nav>
                 </header>
 
-                <main class="mt-6">
-                    <!-- The button to open modal -->
-                    <label for="my_modal_7" class="btn">
+                <main
+                    class="flex flex-col items-center justify-center gap-10 h-lvh"
+                >
+                    <img src="/imgs/Novellus-logo.png" class="w-1/3" alt="Novellus Logo" />
+                    <label for="my_modal_7" class="btn btn-xl">
+                        Calculate Your Loan
                         <Icon
                             icon="line-md:briefcase-check"
-                            class="w-10 h-auto"
+                            class="w-8 h-auto"
                         />
                     </label>
-
-                    <!-- Put this part before </body> tag -->
                     <input
                         type="checkbox"
                         id="my_modal_7"
                         class="modal-toggle"
                     />
                     <div class="modal" role="dialog">
-                        <div class="modal-box">
-                            <h3 class="text-lg font-bold">Hello!</h3>
-                            <p class="py-4">
-                                This modal works with a hidden checkbox!
-                            </p>
+                        <div class="modal-box w-11/12 max-w-5xl">
+                            <h3 class="text-lg font-bold text-left">
+                                Calculate Your Loan
+                            </h3>
+                            <LoanForm />
                         </div>
                         <label class="modal-backdrop" for="my_modal_7"
                             >Close</label
