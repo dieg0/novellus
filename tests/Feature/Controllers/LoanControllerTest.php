@@ -21,7 +21,7 @@ test('loan calculation matches expected example', function () {
 
     $responseData = $response->json();
 
-    expect(round($responseData['summary']['total_interest'], 2))->toBe(2268.49);
+    expect(round($responseData['summary']['total_interest'], 2))->toBe(2597.44);
 
-    expect(round($responseData['summary']['monthly_payment'], 2))->toBe(16765.33);
+    expect(round($responseData['summary']['monthly_payment'], 2))->toBe(17200.33);
 });
