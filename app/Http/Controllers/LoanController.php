@@ -110,6 +110,8 @@ class LoanController extends Controller
         switch ($repaymentType) {
             case 'repayment':
                 return $this->calculateRepaymentLoan($loanAmount, $startDate, $endDate, $dailyRate);
+            case 'interest-only':
+                return $this->calculateInterestOnlyLoan($loanAmount, $startDate, $endDate, $dailyRate);
             default:
                 throw new \InvalidArgumentException('Invalid repayment type');
         }
@@ -161,6 +163,28 @@ class LoanController extends Controller
             'daily_principal_payment' => $dailyPrincipalPayment,
             'total_days' => $totalDays,
             'daily_payments' => $dailyPayments,
+        ];
+    }
+
+    /**
+     * Calculate interest-only loan
+     */
+    private function calculateInterestOnlyLoan(int $loanAmount, Carbon $startDate, Carbon $endDate, float $dailyRate)
+    {
+        $totalDays = $startDate->diffInDays($endDate) + 1;
+        $totalInterest = $loanAmount * $dailyRate * $totalDays;
+
+        $monthlyInterest = ($loanAmount * ($dailyRate * 365)) / 12;
+
+        return [
+            'monthly_payment' => $monthlyInterest,
+            'total_interest' => $totalInterest,
+            'total_paid' => $loanAmount + $totalInterest,
+            'final_payment' => $endDate->format('Y-m-d'),
+            'total_days' => $totalDays,
+            'balloon_principal' => $loanAmount,
+            'monthly_interest_bill' => $monthlyInterest,
+            'interest_per_day' => $loanAmount * $dailyRate,
         ];
     }
 }
