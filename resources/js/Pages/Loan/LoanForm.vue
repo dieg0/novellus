@@ -9,6 +9,7 @@ import TextInput from "@/Components/TextInput.vue";
 
 const showResults = ref(false);
 const calculationResults = ref(null);
+const resultType = ref("repayment");
 
 const form = useForm({
     loan_amount: "",
@@ -31,6 +32,7 @@ const calculateLoan = () => {
         .then((response) => {
             calculationResults.value = response.data;
             showResults.value = true;
+            resultType.value = form.repayment_type;
         })
         .catch((error) => {
             if (error.response?.data?.errors) {
@@ -274,9 +276,46 @@ const formatDate = (dateString) => {
             </div>
 
             <div class="bg-base-200 p-4 rounded-lg shadow-sm">
-                <h3 class="text-lg font-medium">Loan Details</h3>
+                <h3 class="text-lg font-medium mb-4">Loan Details</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                    <div>
+                    <div
+                        v-if="calculationResults.summary.monthly_interest_bill"
+                    >
+                        <span class="font-medium">Monthly Interest Bill</span>
+                        <span class="ml-2 text-gray-900 dark:text-white">
+                            {{
+                                formatCurrency(
+                                    calculationResults.summary
+                                        .monthly_interest_bill
+                                )
+                            }}
+                        </span>
+                    </div>
+                    <div v-if="calculationResults.summary.balloon_principal">
+                        <span class="font-medium">Balloon Principal</span>
+                        <span class="ml-2 text-gray-900 dark:text-white">
+                            {{
+                                formatCurrency(
+                                    calculationResults.summary.balloon_principal
+                                )
+                            }}
+                        </span>
+                    </div>
+                    <div v-if="calculationResults.summary.interest_per_day">
+                        <span class="font-medium">Interest Per Day</span>
+                        <span class="ml-2 text-gray-900 dark:text-white">
+                            {{
+                                formatCurrency(
+                                    calculationResults.summary.interest_per_day
+                                )
+                            }}
+                        </span>
+                    </div>
+                    <div
+                        v-if="
+                            calculationResults.summary.daily_principal_payment
+                        "
+                    >
                         <span class="font-medium"
                             >Daily Principal Payment:</span
                         >
@@ -296,6 +335,18 @@ const formatDate = (dateString) => {
                                 formatDate(
                                     calculationResults.summary.final_payment
                                 )
+                            }}
+                        </span>
+                    </div>
+                    <div>
+                        <span class="font-medium">Repayment Type</span>
+                        <span class="ml-2 text-gray-900 dark:text-white">
+                            {{
+                                resultType === "repayment"
+                                    ? "Repayment"
+                                    : resultType === "interest-only"
+                                    ? "Interest Only"
+                                    : "Interest Retained"
                             }}
                         </span>
                     </div>
